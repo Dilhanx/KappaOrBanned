@@ -101,22 +101,46 @@ def streamercomment(streamername):
   cursor = db.cursor()
   app.logger.info("Send sql statment") 
   cursor.execute("SELECT * From comment where streamer_name= '"+ streamername +"' ;") #Send sql statment to select all data of streamer
-  row = cursor.fetchone()  
+  rows = cursor.fetchall()  
   #Createing json message
   details =[]
   app.logger.info( streamername +" is avaliable")
-  d = collections.OrderedDict()
-  d['streamer_name'] = row.streamer_name
-  d['real_name'] = row.real_name
-  d['img'] = row.img
-  d['schedule'] = row.schedule
-  d['streamer_type'] = row.streamer_type
-  d['bio'] = row.bio
-  details.append(d)
+  for row in rows:
+    d = collections.OrderedDict()
+    d['streamer_name'] = row.streamer_name
+    d['user_name'] = row.user_name
+    d['comment'] = row.comment
+    details.append(d)
   j = json.dumps(details)
   db.close()
+  app.logger.info(" Sending json message")
   return j
 
+@app.route('/streamer/<streamername>/emote')# Retrive emotes used by streamer
+def streameremote(streamername):
+  app.logger.info("Streamer Comments"+streamername) 
+  try:
+    db = connectdb()
+  except Exception as identifier:
+    app.logger.error(identifier)
+    return "{\"status\": \"No connection to database\"}"
+  app.logger.info("Connection establish")  
+  cursor = db.cursor()
+  app.logger.info("Send sql statment") 
+  cursor.execute("SELECT * From emote_rank where streamer_name= '"+ streamername +"'order by rank ;") #Send sql statment to select emotes of streamer
+  rows = cursor.fetchall()  
+  #Createing json message
+  details =[]
+  app.logger.info( streamername +" is avaliable")
+  for row in rows:
+    d = collections.OrderedDict()
+    d['emote_name'] = row.emote_name
+    d['rank'] = row.rank
+    details.append(d)
+  j = json.dumps(details)
+  db.close()
+  app.logger.info(" Sending json message")
+  return j
 @app.route('/login',methods=['POST']) # The login method
 def login():
     try:
