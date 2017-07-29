@@ -39,3 +39,30 @@ pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 13 for SQL S
 2017-07-28 17:53:40,868 - __main__ - INFO - Connection establish
 2017-07-28 17:53:40,868 - __main__ - INFO - Send sql statment
 2017-07-28 17:53:41,548 - __main__ - INFO - 101dilhanx account created
+2017-07-28 20:15:27,107 - __main__ - INFO - Begining database connection
+2017-07-28 20:15:27,110 - __main__ - INFO - File open
+2017-07-28 20:15:27,111 - __main__ - INFO - File close
+2017-07-28 20:15:30,549 - __main__ - INFO - Connection establish
+2017-07-28 20:15:30,549 - __main__ - INFO - Send sql statment
+2017-07-28 20:15:30,847 - __main__ - ERROR - Exception on /register [POST]
+Traceback (most recent call last):
+  File "C:\Users\dilha\AppData\Local\Programs\Python\Python35-32\lib\site-packages\flask\app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\dilha\AppData\Local\Programs\Python\Python35-32\lib\site-packages\flask\app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\dilha\AppData\Local\Programs\Python\Python35-32\lib\site-packages\flask\app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\Users\dilha\AppData\Local\Programs\Python\Python35-32\lib\site-packages\flask\_compat.py", line 33, in reraise
+    raise value
+  File "C:\Users\dilha\AppData\Local\Programs\Python\Python35-32\lib\site-packages\flask\app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\dilha\AppData\Local\Programs\Python\Python35-32\lib\site-packages\flask\app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "d:\KappaOrBanned\main.py", line 81, in register
+pyodbc.ProgrammingError: ('42S22', "[42S22] [Microsoft][ODBC Driver 13 for SQL Server][SQL Server]Invalid column name 'username'. (207) (SQLExecDirectW)")
+2017-07-28 20:16:31,315 - __main__ - INFO - Begining database connection
+2017-07-28 20:16:31,316 - __main__ - INFO - File open
+2017-07-28 20:16:31,316 - __main__ - INFO - File close
+2017-07-28 20:16:33,777 - __main__ - INFO - Connection establish
+2017-07-28 20:16:33,778 - __main__ - INFO - Send sql statment
+2017-07-28 20:16:34,587 - __main__ - INFO - 101dilhan101 account created

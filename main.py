@@ -26,9 +26,6 @@ def connectdb():# Create connection to sql database
   
   file.close()
   app.logger.info("File close")
-
-  #Driver={ODBC Driver 13 for SQL Server};Server=tcp:kappaorbanned.database.windows.net,1433;Database=TwitchStats;Uid=Dilhan@kappaorbanned;Pwd={your_password_here};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;
-  #db = pyodbc.connect('DRIVER='+driver+';PORT=1433;SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
   db = pyodbc.connect('DRIVER='+driver+';PORT=1433;SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
   return db
 
@@ -37,8 +34,18 @@ def hello_world():
   app.logger.info("Kappa")
   return 'Kappa'
 
-@app.route('/search')
-
+@app.route('/search',methods=['POST'])
+def search():
+  try:
+     db = connectdb()
+    except Exception as identifier:
+      app.logger.error(identifier)
+      return "{\"status\": \"No connection to database\"}"
+  app.logger.info("Connection establish")  
+  cursor = db.cursor()
+  app.logger.info("Send sql statment") 
+  cursor.execute("SELECT count(*) As cou From user_account where user_name= '"+request.form['username']+"' AND password ='"+request.form['password']+"' ;") #Send sql statment to check for account 
+  
 @app.route('/streamer/<streamername>')
 def streamer(streamername):
   return streamername
@@ -57,7 +64,7 @@ def login():
     app.logger.info("Connection establish")  
     cursor = db.cursor()
     app.logger.info("Send sql statment") 
-    cursor.execute("SELECT count(*) As cou From user_account where username= '"+request.form['username']+"' AND password ='"+request.form['password']+"' ;") #Send sql statment to check for account 
+    cursor.execute("SELECT count(*) As cou From user_account where user_name= '"+request.form['username']+"' AND password ='"+request.form['password']+"' ;") #Send sql statment to check for account 
     
     row = cursor.fetchone()
     db.close()
@@ -78,12 +85,12 @@ def register():
   app.logger.info("Connection establish")  
   cursor = db.cursor()
   app.logger.info("Send sql statment") 
-  cursor.execute("SELECT * From user_account where username= '"+request.form['username'] +"';") #Send sql statment to check if account is all ready made
+  cursor.execute("SELECT * From user_account where user_name= '"+request.form['username'] +"';") #Send sql statment to check if account is all ready made
   row = cursor.fetchone()
   print(row)
 
 
-  cursor.execute("SELECT count(*) As cou From user_account where username= '"+request.form['username'] +"';") #Send sql statment to check if account is all ready made
+  cursor.execute("SELECT count(*) As cou From user_account where user_name= '"+request.form['username'] +"';") #Send sql statment to check if account is all ready made
   
   row = cursor.fetchone()
  
