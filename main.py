@@ -5,6 +5,7 @@ import requests
 import pyodbc 
 import logging
 import time
+import collections
 app = Flask(__name__)
 def connectdb():# Create connection to sql database
   app.logger.info("Begining database connection")
@@ -34,25 +35,87 @@ def hello_world():
   app.logger.info("Kappa")
   return 'Kappa'
 
-@app.route('/search',methods=['POST'])
+@app.route('/search',methods=['POST'])#Search if stearemr exist
 def search():
+  app.logger.info("Searching "+request.form['streamer']) 
   try:
-     db = connectdb()
-    except Exception as identifier:
-      app.logger.error(identifier)
-      return "{\"status\": \"No connection to database\"}"
+    db = connectdb()
+  except Exception as identifier:
+    app.logger.error(identifier)
+    return "{\"status\": \"No connection to database\"}"
   app.logger.info("Connection establish")  
   cursor = db.cursor()
   app.logger.info("Send sql statment") 
-  cursor.execute("SELECT count(*) As cou From user_account where user_name= '"+request.form['username']+"' AND password ='"+request.form['password']+"' ;") #Send sql statment to check for account 
-  
-@app.route('/streamer/<streamername>')
-def streamer(streamername):
-  return streamername
+  cursor.execute("SELECT count(*) As cou From streamer where streamer_name= '"+request.form['streamer'] +"' ;") #Send sql statment to check if streamer exist
+  row = cursor.fetchone()  
+  if row.cou==1:
+    app.logger.info(request.form['streamer']+" is avaliable")
+    db.close()
+    return "{\"status\": \"valid\"}"#Return valid if found
+  else:
+    app.logger.info(request.form['streamer']+" does not exist")
+    db.close()
+    return "{\"status\": \"Invalid\"}"#Return valid if not found
 
-@app.route('/streamer/<streamername>/comment')
+@app.route('/streamer/<streamername>')# Retrive streamer detials
+def streamer(streamername):
+    app.logger.info("Streamer "+streamername) 
+    try:
+      db = connectdb()
+    except Exception as identifier:
+      app.logger.error(identifier)
+      return "{\"status\": \"No connection to database\"}"
+    app.logger.info("Connection establish")  
+    cursor = db.cursor()
+    app.logger.info("Send sql statment") 
+    cursor.execute("SELECT * From streamer where streamer_name= '"+ streamername +"' ;") #Send sql statment to select all data of streamer
+    row = cursor.fetchone()  
+    #Createing json message
+    details =[]
+    app.logger.info( streamername +" is avaliable")
+    d = collections.OrderedDict()
+    d['streamer_name'] = row.streamer_name
+    d['real_name'] = row.real_name
+    d['img'] = row.img
+    d['schedule'] = row.schedule
+    d['streamer_type'] = row.streamer_type
+    d['bio'] = row.bio
+    details.append(d)
+    j = json.dumps(details)
+    db.close()
+    return j
+
+   
+    
+ 
+
+@app.route('/streamer/<streamername>/comment')# Retrive comments about streamer
 def streamercomment(streamername):
-  return ""+streamername+"comment"
+  app.logger.info("Streamer Comments"+streamername) 
+  try:
+    db = connectdb()
+  except Exception as identifier:
+    app.logger.error(identifier)
+    return "{\"status\": \"No connection to database\"}"
+  app.logger.info("Connection establish")  
+  cursor = db.cursor()
+  app.logger.info("Send sql statment") 
+  cursor.execute("SELECT * From comment where streamer_name= '"+ streamername +"' ;") #Send sql statment to select all data of streamer
+  row = cursor.fetchone()  
+  #Createing json message
+  details =[]
+  app.logger.info( streamername +" is avaliable")
+  d = collections.OrderedDict()
+  d['streamer_name'] = row.streamer_name
+  d['real_name'] = row.real_name
+  d['img'] = row.img
+  d['schedule'] = row.schedule
+  d['streamer_type'] = row.streamer_type
+  d['bio'] = row.bio
+  details.append(d)
+  j = json.dumps(details)
+  db.close()
+  return j
 
 @app.route('/login',methods=['POST']) # The login method
 def login():
@@ -87,7 +150,7 @@ def register():
   app.logger.info("Send sql statment") 
   cursor.execute("SELECT * From user_account where user_name= '"+request.form['username'] +"';") #Send sql statment to check if account is all ready made
   row = cursor.fetchone()
-  print(row)
+  
 
 
   cursor.execute("SELECT count(*) As cou From user_account where user_name= '"+request.form['username'] +"';") #Send sql statment to check if account is all ready made
@@ -107,7 +170,7 @@ def register():
 
 if __name__ == '__main__':
   formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s") #Set log message formate
-  handler = RotatingFileHandler("log/"+time.strftime("%Y-%m-%d ")+".log", maxBytes=10000, backupCount=1) 
+  handler = RotatingFileHandler("Log/"+time.strftime("%Y-%m-%d ")+".log", maxBytes=10000, backupCount=1) # Set log file
   handler.setLevel(logging.INFO) 
   handler.setFormatter(formatter)
   app.logger.addHandler(handler) 
