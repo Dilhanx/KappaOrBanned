@@ -34,7 +34,13 @@ def connectdb():# Create connection to sql database
   app.logger.info("File close")
   db = pyodbc.connect('DRIVER='+driver+';PORT=1433;SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
   return db
-
+@app.route('/banned')
+def banned():
+  try:
+      db = connectdb()
+  except Exception as identifier:
+    app.logger.error(identifier)
+  return "{\"status\": \"No connection to database\"}"
 @app.route('/')
 def kappa():
   app.logger.info("Kappa")
