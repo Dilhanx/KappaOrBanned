@@ -31,7 +31,7 @@ def connectdb():# Create connection to sql database
   return db
 
 @app.route('/')
-def hello_world():
+def kappa():
   app.logger.info("Kappa")
   return 'Kappa'
 
@@ -83,6 +83,7 @@ def streamer(streamername):
     details.append(d)
     j = json.dumps(details)
     db.close()
+    app.logger.info(" Sending json message")
     return j
 
    
@@ -174,11 +175,7 @@ def register():
   app.logger.info("Send sql statment") 
   cursor.execute("SELECT * From user_account where user_name= '"+request.form['username'] +"';") #Send sql statment to check if account is all ready made
   row = cursor.fetchone()
-  
-
-
-  cursor.execute("SELECT count(*) As cou From user_account where user_name= '"+request.form['username'] +"';") #Send sql statment to check if account is all ready made
-  
+  cursor.execute("SELECT count(*) As cou From user_account where user_name= '"+request.form['username'] +"';") #Send sql statment to check if account is all ready made  
   row = cursor.fetchone()
  
   if row.cou!=0:
@@ -193,6 +190,7 @@ def register():
     return "{\"status\": \"Account created\"}"  
 
 if __name__ == '__main__':
+  #Create Logger
   formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s") #Set log message formate
   handler = RotatingFileHandler("Log/"+time.strftime("%Y-%m-%d ")+".log", maxBytes=10000, backupCount=1) # Set log file
   handler.setLevel(logging.INFO) 
