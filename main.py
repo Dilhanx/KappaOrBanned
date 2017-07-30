@@ -9,27 +9,23 @@ import collections
 app = Flask(__name__)
 def connectdb():# Create connection to sql database
   app.logger.info("Begining database connection")
-  # file = open("dbc.txt", "r")
-  # text = file.readline().split(",")
+  file = open("dbc.txt", "r")
+  text = file.readline().split(",")
   app.logger.info("File open")
   # Asign values to  send
 
   # Asign database connection details
-  # server = text[0]  # server = "kappaorbannedj.database.windows.net"
+  server = text[0]  # server = "kappaorbannedj.database.windows.net"
 
-  # database = text[1]   # database = "TwitchStats"
+  database = text[1]   # database = "TwitchStats"
 
-  # username = text[2] # username = "Dilhan@kappaorbannedj"
+  username = text[2] # username = "Dilhan@kappaorbannedj"
 
-  # password = text[3]   # password = "101Luminous101"
+  password = text[3]   # password = "101Luminous101"
   
-  # driver= text[4] # driver="{ODBC Driver 13 for SQL Server}"   
+  driver= text[4] # driver="{ODBC Driver 13 for SQL Server}"   
   
-  server = "kappaorbannedj.database.windows.net"
-  database = "TwitchStats"
-  username = "Dilhan@kappaorbannedj"
-  password = "101Luminous101"
-  driver="{ODBC Driver 13 for SQL Server}"   
+ 
   # file.close()
   app.logger.info("File close")
   db = pyodbc.connect('DRIVER='+driver+';PORT=1433;SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
@@ -203,7 +199,7 @@ def register():
 if __name__ == '__main__':
   #Create Logger
   formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s") #Set log message formate
-  handler = RotatingFileHandler(time.strftime("%Y-%m-%d ")+".log", maxBytes=10000, backupCount=1) # Set log file
+  handler = RotatingFileHandler("Log/"+time.strftime("%Y-%m-%d ")+".log", maxBytes=10000, backupCount=1) # Set log file
   handler.setLevel(logging.INFO) 
   handler.setFormatter(formatter)
   app.logger.addHandler(handler) 
