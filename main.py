@@ -203,7 +203,7 @@ def register():
 if __name__ == '__main__':
   #Create Logger
   formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s") #Set log message formate
-  handler = RotatingFileHandler("Log/"+time.strftime("%Y-%m-%d ")+".log", maxBytes=10000, backupCount=1) # Set log file
+  handler = RotatingFileHandler(time.strftime("%Y-%m-%d ")+".log", maxBytes=10000, backupCount=1) # Set log file
   handler.setLevel(logging.INFO) 
   handler.setFormatter(formatter)
   app.logger.addHandler(handler) 
