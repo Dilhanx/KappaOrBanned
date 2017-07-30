@@ -9,23 +9,28 @@ import collections
 app = Flask(__name__)
 def connectdb():# Create connection to sql database
   app.logger.info("Begining database connection")
-  file = open("D:/KappaOrBanned/dbc.txt", "r")
-  text = file.readline().split(",")
+  # file = open("dbc.txt", "r")
+  # text = file.readline().split(",")
   app.logger.info("File open")
   # Asign values to  send
 
   # Asign database connection details
-  server = text[0]  # server = "kappaorbannedj.database.windows.net"
+  # server = text[0]  # server = "kappaorbannedj.database.windows.net"
 
-  database = text[1]   # database = "TwitchStats"
+  # database = text[1]   # database = "TwitchStats"
 
-  username = text[2] # username = "Dilhan@kappaorbannedj"
+  # username = text[2] # username = "Dilhan@kappaorbannedj"
 
-  password = text[3]   # password = "101Luminous101"
+  # password = text[3]   # password = "101Luminous101"
   
-  driver= text[4] # driver="{ODBC Driver 13 for SQL Server}"   
+  # driver= text[4] # driver="{ODBC Driver 13 for SQL Server}"   
   
-  file.close()
+  server = "kappaorbannedj.database.windows.net"
+  database = "TwitchStats"
+  username = "Dilhan@kappaorbannedj"
+  password = "101Luminous101"
+  driver="{ODBC Driver 13 for SQL Server}"   
+  # file.close()
   app.logger.info("File close")
   db = pyodbc.connect('DRIVER='+driver+';PORT=1433;SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
   return db
